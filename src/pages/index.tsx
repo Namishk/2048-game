@@ -1,6 +1,31 @@
 import Head from "next/head";
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    const keyPressListner = (event: KeyboardEvent): void => {
+      switch (event.key) {
+        case "ArrowUp":
+          console.log("you pressed: ", event.key);
+          break;
+        case "ArrowDown":
+          console.log("you pressed: ", event.key);
+          break;
+        case "ArrowLeft":
+          console.log("you pressed: ", event.key);
+          break;
+        case "ArrowRight":
+          console.log("you pressed: ", event.key);
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", keyPressListner);
+
+    return () => {
+      window.removeEventListener("keydown", keyPressListner);
+    };
+  }, []);
   return (
     <>
       <Head>
