@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const INITIAL_CELL_VALUE_OPTIONS = [2, 4];
 const useGame = (size: number) => {
-    const getInitialGrid = (): number[][] => {
+    const getInitialGrid = useCallback((): number[][] => {
         let res = [];
 
         for (let i = 0; i < size; i++) {
@@ -30,12 +30,12 @@ const useGame = (size: number) => {
         }
 
         return res;
-    };
+    }, [size]);
     const [grid, setGrid] = useState<number[][]>([]);
 
     useEffect(() => {
         setGrid(getInitialGrid());
-    }, []);
+    }, [getInitialGrid]);
     const getRandomValidCell = (
         grid: number[][],
     ): [number, number] | undefined => {

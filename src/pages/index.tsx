@@ -1,10 +1,17 @@
 import Grid from "@/components/grid";
 import useGame from "@/hooks/useGame";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-    const { grid, moveUp, moveDown, moveLeft, moveRight } = useGame(4);
+    const [gameState, setGameState] = useState<"initial" | "playing">(
+        "initial",
+    );
+    const [gridSize, setGridSize] = useState<number>(4);
+    const [input, setInput] = useState(4);
+    const [inputError, setInputError] = useState("");
+    const { grid, moveUp, moveDown, moveLeft, moveRight } = useGame(gridSize);
+
     useEffect(() => {
         const keyPressListner = (event: KeyboardEvent): void => {
             switch (event.key) {
@@ -24,6 +31,8 @@ export default function Home() {
                     console.log("you pressed: ", event.key);
                     moveRight();
                     break;
+                case "w":
+                    console.log("you pressed: ", event.key);
             }
         };
 
@@ -32,7 +41,7 @@ export default function Home() {
         return () => {
             window.removeEventListener("keydown", keyPressListner);
         };
-    }, [grid]);
+    });
     return (
         <>
             <Head>
@@ -43,8 +52,51 @@ export default function Home() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-                <Grid grid={grid} />
+            <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+                {gameState === "initial" ? (
+                    <>
+                        <div className="text-3xl">
+                            Size:{" "}
+                            <input
+                                type="number"
+                                min={3}
+                                max={10}
+                                className="rounded-md bg-indigo-500 p-2 text-white"
+                                value={input}
+                                onChange={(e) => {
+                                    let _val = e.target.value;
+                                    if (_val) {
+                                        let val = parseInt(_val);
+                                        if (val > 10 || val < 3) {
+                                            setInputError(
+                                                "value outside game range please add number in range of 3 to 10",
+                                            );
+                                        } else {
+                                            setInputError("");
+                                        }
+                                        setInput(val);
+                                    }
+                                }}
+                            />
+                        </div>
+                        {inputError && <div>{inputError}</div>}
+                    </>
+                ) : (
+                    <Grid grid={grid} />
+                )}
+                <div
+                    className="cursor-pointer text-6xl"
+                    onClick={() => {
+                        if (gameState === "initial" && inputError === "") {
+                            setGridSize(input);
+                            setGameState("playing");
+                        } else {
+                            setGameState("initial");
+                        }
+                    }}
+                >
+                    {gameState === "initial" ? "START" : "RESET"}
+                </div>
             </main>
         </>
     );
