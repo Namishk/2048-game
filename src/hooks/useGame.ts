@@ -76,7 +76,7 @@ const useGame = (size: number) => {
     };
 
     const moveUp = () => {
-        if (!grid || grid.length === 0) return;
+        if (!grid || grid?.length === 0) return;
         const n = grid.length;
         const temp = grid.map((r) => [...r]);
 
@@ -89,7 +89,7 @@ const useGame = (size: number) => {
         }
 
         const cell = getRandomValidCell(temp);
-        if (cell && cell.length === 2) {
+        if (cell && cell?.length === 2) {
             const [r, c] = cell as number[];
             // @ts-ignore
             temp[r]![c] =
@@ -103,7 +103,7 @@ const useGame = (size: number) => {
     };
 
     const moveDown = () => {
-        if (!grid || grid.length === 0) return;
+        if (!grid || grid?.length === 0) return;
         const n = grid.length;
         const temp = grid.map((r) => [...r]);
 
@@ -116,7 +116,7 @@ const useGame = (size: number) => {
         }
 
         const cell = getRandomValidCell(temp);
-        if (cell && cell.length === 2) {
+        if (cell && cell?.length === 2) {
             const [r, c] = cell as number[];
             // @ts-ignore
             temp[r]![c] =
@@ -130,13 +130,13 @@ const useGame = (size: number) => {
     };
 
     const moveLeft = () => {
-        if (!grid || grid.length === 0) return;
+        if (!grid || grid?.length === 0) return;
         const temp = grid.map((r) => [...r]);
         for (let row = 0; row < temp.length; row++) {
             temp[row] = slideAndMergeLine(temp[row]!, "left");
         }
         const cell = getRandomValidCell(temp);
-        if (cell && cell.length === 2) {
+        if (cell && cell?.length === 2) {
             const [r, c] = cell as number[];
             // @ts-ignore
             temp[r]![c] =
@@ -150,13 +150,13 @@ const useGame = (size: number) => {
     };
 
     const moveRight = () => {
-        if (!grid || grid.length === 0) return;
+        if (!grid || grid?.length === 0) return;
         const temp = grid.map((r) => [...r]);
         for (let row = 0; row < temp.length; row++) {
             temp[row] = slideAndMergeLine(temp[row]!, "right");
         }
         const cell = getRandomValidCell(temp);
-        if (cell && cell.length === 2) {
+        if (cell && cell?.length === 2) {
             const [r, c] = cell as number[];
             // @ts-ignore
             temp[r]![c] =

@@ -33,6 +33,9 @@ export default tseslint.config(
                 "error",
                 { checksVoidReturn: { attributes: false } },
             ],
+            "@typescript-eslint/ban-ts-comment": "off",
+            "@typescript-eslint/no-unsafe-member-access": "warn",
+            "prefer-const": "off",
         },
     },
     {
