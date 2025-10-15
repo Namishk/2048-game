@@ -4,21 +4,25 @@ import Head from "next/head";
 import { useEffect } from "react";
 
 export default function Home() {
-    const { grid } = useGame(4);
+    const { grid, moveUp, moveDown, moveLeft, moveRight } = useGame(4);
     useEffect(() => {
         const keyPressListner = (event: KeyboardEvent): void => {
             switch (event.key) {
                 case "ArrowUp":
                     console.log("you pressed: ", event.key);
+                    moveUp();
                     break;
                 case "ArrowDown":
                     console.log("you pressed: ", event.key);
+                    moveDown();
                     break;
                 case "ArrowLeft":
                     console.log("you pressed: ", event.key);
+                    moveLeft();
                     break;
                 case "ArrowRight":
                     console.log("you pressed: ", event.key);
+                    moveRight();
                     break;
             }
         };
@@ -28,7 +32,7 @@ export default function Home() {
         return () => {
             window.removeEventListener("keydown", keyPressListner);
         };
-    }, []);
+    }, [grid]);
     return (
         <>
             <Head>
@@ -40,7 +44,7 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-                <Grid size={4} grid={grid} />
+                <Grid grid={grid} />
             </main>
         </>
     );
