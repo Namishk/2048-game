@@ -1,8 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 const INITIAL_CELL_VALUE_OPTIONS = [2, 4];
 const useGame = (size: number) => {
-    const getInitialGrid = useCallback((): number[][] => {
+    const [grid, setGrid] = useState<number[][]>([]);
+    const [gameState, setGameState] = useState<{
+        ended: boolean;
+        victory: boolean;
+        maxNumberReached: number;
+    }>({
+        ended: false,
+        victory: false,
+        maxNumberReached: 2,
+    });
+    const initializeGrid = () => {
         let res = [];
 
         for (let i = 0; i < size; i++) {
@@ -28,14 +38,14 @@ const useGame = (size: number) => {
                 tilesPopulated++;
             }
         }
+        setGrid(res);
+        setGameState({
+            ended: false,
+            victory: false,
+            maxNumberReached: 2,
+        });
+    };
 
-        return res;
-    }, [size]);
-    const [grid, setGrid] = useState<number[][]>([]);
-
-    useEffect(() => {
-        setGrid(getInitialGrid());
-    }, [getInitialGrid]);
     const getRandomValidCell = (
         grid: number[][],
     ): [number, number] | undefined => {
@@ -47,7 +57,16 @@ const useGame = (size: number) => {
                 }
             }
         }
-        if (validCells.length === 0) return undefined;
+        if (validCells.length === 0) {
+            setGameState((prev) => {
+                return {
+                    ...prev,
+                    ended: true,
+                    victory: false,
+                };
+            });
+            return undefined;
+        }
         const idx = Math.floor(Math.random() * validCells.length);
         return validCells[idx];
     };
@@ -64,6 +83,21 @@ const useGame = (size: number) => {
         for (let i = 0; i < arr.length; i++) {
             if (i + 1 < arr.length && arr[i] === arr[i + 1]) {
                 merged.push(arr[i]! * 2);
+                if (arr[i]! * 2 > gameState.maxNumberReached) {
+                    setGameState((prev) => {
+                        if (arr[i]! * 2 === 2048) {
+                            return {
+                                maxNumberReached: arr[i]! * 2,
+                                ended: true,
+                                victory: true,
+                            };
+                        }
+                        return {
+                            ...prev,
+                            maxNumberReached: arr[i]! * 2,
+                        };
+                    });
+                }
                 i++;
             } else {
                 merged.push(arr[i]!);
@@ -175,6 +209,8 @@ const useGame = (size: number) => {
         moveDown,
         moveLeft,
         moveRight,
+        gameState,
+        initializeGrid,
     };
 };
 

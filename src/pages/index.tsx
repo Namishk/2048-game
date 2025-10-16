@@ -4,35 +4,45 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-    const [gameState, setGameState] = useState<"initial" | "playing">(
+    const [playingState, setPlayingState] = useState<"initial" | "playing">(
         "initial",
     );
     const [gridSize, setGridSize] = useState<number>(4);
     const [input, setInput] = useState(4);
     const [inputError, setInputError] = useState("");
-    const { grid, moveUp, moveDown, moveLeft, moveRight } = useGame(gridSize);
-
+    const {
+        grid,
+        moveUp,
+        moveDown,
+        moveLeft,
+        moveRight,
+        gameState,
+        initializeGrid,
+    } = useGame(gridSize);
+    console.log(gameState);
     useEffect(() => {
         const keyPressListner = (event: KeyboardEvent): void => {
-            switch (event.key) {
-                case "ArrowUp":
-                    console.log("you pressed: ", event.key);
-                    moveUp();
-                    break;
-                case "ArrowDown":
-                    console.log("you pressed: ", event.key);
-                    moveDown();
-                    break;
-                case "ArrowLeft":
-                    console.log("you pressed: ", event.key);
-                    moveLeft();
-                    break;
-                case "ArrowRight":
-                    console.log("you pressed: ", event.key);
-                    moveRight();
-                    break;
-                case "w":
-                    console.log("you pressed: ", event.key);
+            if (!gameState.ended) {
+                switch (event.key) {
+                    case "ArrowUp":
+                        console.log("you pressed: ", event.key);
+                        moveUp();
+                        break;
+                    case "ArrowDown":
+                        console.log("you pressed: ", event.key);
+                        moveDown();
+                        break;
+                    case "ArrowLeft":
+                        console.log("you pressed: ", event.key);
+                        moveLeft();
+                        break;
+                    case "ArrowRight":
+                        console.log("you pressed: ", event.key);
+                        moveRight();
+                        break;
+                    case "w":
+                        console.log("you pressed: ", event.key);
+                }
             }
         };
 
@@ -53,7 +63,19 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-                {gameState === "initial" ? (
+                {gameState.ended ? (
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="text-5xl">GAME OVER</div>
+                        {gameState.victory ? (
+                            <div className="text-7xl">YOU WON!!!</div>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                ) : (
+                    <></>
+                )}
+                {playingState === "initial" ? (
                     <>
                         <div className="text-3xl">
                             Size:{" "}
@@ -87,15 +109,16 @@ export default function Home() {
                 <div
                     className="cursor-pointer text-6xl"
                     onClick={() => {
-                        if (gameState === "initial" && inputError === "") {
+                        if (playingState === "initial" && inputError === "") {
                             setGridSize(input);
-                            setGameState("playing");
+                            setPlayingState("playing");
+                            initializeGrid();
                         } else {
-                            setGameState("initial");
+                            setPlayingState("initial");
                         }
                     }}
                 >
-                    {gameState === "initial" ? "START" : "RESET"}
+                    {playingState === "initial" ? "START" : "RESET"}
                 </div>
             </main>
         </>
