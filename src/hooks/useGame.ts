@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 const INITIAL_CELL_VALUE_OPTIONS = [2, 4];
+const HIGHSCORE_KEY = "highscore";
 const useGame = (size: number) => {
     const [grid, setGrid] = useState<number[][]>([]);
     const [gameState, setGameState] = useState<{
@@ -12,6 +13,7 @@ const useGame = (size: number) => {
         victory: false,
         maxNumberReached: 2,
     });
+    const [highScore, setHighScore] = useState(0);
     const initializeGrid = () => {
         let res = [];
 
@@ -39,6 +41,13 @@ const useGame = (size: number) => {
             }
         }
         setGrid(res);
+        const hScore = localStorage.getItem(HIGHSCORE_KEY);
+        console.log(hScore, "initscore");
+        if (hScore == null) {
+            setHighScore(0);
+        } else {
+            setHighScore(parseInt(hScore));
+        }
         setGameState({
             ended: false,
             victory: false,
@@ -84,10 +93,11 @@ const useGame = (size: number) => {
             if (i + 1 < arr.length && arr[i] === arr[i + 1]) {
                 merged.push(arr[i]! * 2);
                 if (arr[i]! * 2 > gameState.maxNumberReached) {
+                    const maxNum = arr[i]! * 2;
                     setGameState((prev) => {
-                        if (arr[i]! * 2 === 2048) {
+                        if (maxNum === 2048) {
                             return {
-                                maxNumberReached: arr[i]! * 2,
+                                maxNumberReached: maxNum,
                                 ended: true,
                                 victory: true,
                             };
@@ -97,6 +107,9 @@ const useGame = (size: number) => {
                             maxNumberReached: arr[i]! * 2,
                         };
                     });
+
+                    localStorage.setItem(HIGHSCORE_KEY, maxNum.toString());
+                    setHighScore(maxNum);
                 }
                 i++;
             } else {
@@ -211,6 +224,7 @@ const useGame = (size: number) => {
         moveRight,
         gameState,
         initializeGrid,
+        highScore,
     };
 };
 

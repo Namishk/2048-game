@@ -1,4 +1,5 @@
 import Grid from "@/components/grid";
+import KeyboardIcons from "@/components/keyboardIcons";
 import useGame from "@/hooks/useGame";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ export default function Home() {
         moveRight,
         gameState,
         initializeGrid,
+        highScore,
     } = useGame(gridSize);
     console.log(gameState);
     useEffect(() => {
@@ -63,6 +65,21 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+                <div className="text-7xl">2048</div>
+                {playingState === "initial" ? (
+                    <></>
+                ) : (
+                    <div className="flex gap-6">
+                        <div className="font-font-bold flex w-30 flex-col items-center rounded-md bg-indigo-400 py-2 text-lg">
+                            <div className="">SCORE</div>
+                            <div className="">{gameState.maxNumberReached}</div>
+                        </div>
+                        <div className="font-font-bold flex w-30 flex-col items-center rounded-md bg-indigo-400 py-2 text-lg">
+                            <div className="">BEST</div>
+                            <div className="">{highScore}</div>
+                        </div>
+                    </div>
+                )}
                 {gameState.ended ? (
                     <div className="flex flex-col items-center justify-center">
                         <div className="text-5xl">GAME OVER</div>
@@ -75,6 +92,7 @@ export default function Home() {
                 ) : (
                     <></>
                 )}
+
                 {playingState === "initial" ? (
                     <>
                         <div className="text-3xl">
@@ -120,6 +138,48 @@ export default function Home() {
                 >
                     {playingState === "initial" ? "START" : "RESET"}
                 </div>
+                {playingState === "initial" ? (
+                    <></>
+                ) : (
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-center">
+                            <div
+                                className="flex h-20 w-20 cursor-pointer items-center justify-center border"
+                                onClick={() => {
+                                    moveUp();
+                                }}
+                            >
+                                <KeyboardIcons arrow="UP" />
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <div
+                                className="flex h-20 w-20 cursor-pointer items-center justify-center border"
+                                onClick={() => {
+                                    moveLeft();
+                                }}
+                            >
+                                <KeyboardIcons arrow="LEFT" />
+                            </div>
+                            <div
+                                className="flex h-20 w-20 cursor-pointer items-center justify-center border"
+                                onClick={() => {
+                                    moveDown();
+                                }}
+                            >
+                                <KeyboardIcons arrow="DOWN" />
+                            </div>
+                            <div
+                                className="flex h-20 w-20 cursor-pointer items-center justify-center border"
+                                onClick={() => {
+                                    moveRight();
+                                }}
+                            >
+                                <KeyboardIcons arrow="RIGHT" />
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
         </>
     );
